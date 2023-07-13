@@ -16,4 +16,15 @@ class Product extends Model
     {
         return $this->belongsTo(CategoryProduct::class);
     }
+
+    public function scopeFilter($query, array $fillters)
+    {
+
+        $query->when($fillters['search'] ?? false, function ($query, $search) {
+            return $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            });
+        });
+
+    }
 }
