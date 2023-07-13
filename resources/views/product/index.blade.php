@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Kategori Produk') }}
+            {{ __(' Produk') }}
         </h2>
     </x-slot>
 
@@ -18,7 +18,7 @@
                   </div>
               @endif
               <div class="mb-4">
-                <button onclick="openCreateProductModal()" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-1.5 text-center mr-2">Add Kategori Produk</button>
+                <button onclick="openCreateProductModal()" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-1.5 text-center mr-2">Add  Produk</button>
               </div>
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -174,33 +174,30 @@ $(document).on('click', '.delete-btn', function(event) {
 
         
         function editProduct(productId) {
-    // Kirim permintaan AJAX untuk mendapatkan data produk berdasarkan ID
     console.log(productId);
     $.ajax({
         url: '/api/product/' + productId,
         type: 'GET',
         success: function(response) {
             console.log(response.data.name);
-            // Tampilkan data produk dalam modal
-            $('#editProductModal').removeClass('hidden'); // Menghapus kelas 'hidden' untuk menampilkan modal
-            $('#editProductForm').attr('onsubmit', 'updateProduct(event, ' + productId + ')'); // Sesuaikan dengan ID formulir Anda
+            $('#editProductModal').removeClass('hidden'); 
+            $('#editProductForm').attr('onsubmit', 'updateProduct(event, ' + productId + ')'); 
             
-            // Isi nilai input dengan data produk yang diterima
+        
             $('#editProductName').val(response.data.name);
             $('#editProductCode').val(response.data.code);
             $('#editProductDesc').val(response.data.desc);
             $('#editProductPrice').val(response.data.price);
             $('#editProductStock').val(response.data.stok);
 
-            // Ambil data semua kategori
+         
             $.ajax({
                 url: '/api/category-product',
                 type: 'GET',
                 success: function(categories) {
-                    // Tampilkan data semua kategori pada elemen <select>
                     var categoryOptions = '';
                     categories.data.forEach(function(category) {
-                        // Periksa apakah kategori saat ini sama dengan kategori produk yang sedang diedit
+                     
                         var selected = '';
                         if (category.id === response.data.category_product_id) {
                             selected = 'selected';
@@ -208,7 +205,7 @@ $(document).on('click', '.delete-btn', function(event) {
                         categoryOptions += '<option value="' + category.id + '" ' + selected + '>' + category.nama + '</option>';
                     });
 
-                    // Masukkan opsi kategori ke dalam elemen <select>
+                   
                     $('#editProductCategory').html(categoryOptions);
                 },
                 error: function(xhr) {
@@ -217,7 +214,6 @@ $(document).on('click', '.delete-btn', function(event) {
             });
         },
         error: function(xhr) {
-            // Tangani kesalahan jika terjadi
             console.log(xhr.responseText);
         }
     });
@@ -225,10 +221,10 @@ $(document).on('click', '.delete-btn', function(event) {
 
 
 function updateProduct(event, productId) {
-    // Menghentikan perilaku default form submit
+    
     event.preventDefault();
 
-    // Ambil data dari form
+  
     var formData = {
         name: $('#editProductName').val(),
         code: $('#editProductCode').val(),
@@ -244,7 +240,6 @@ function updateProduct(event, productId) {
         type: 'PUT',
         data: formData,
         success: function(response) {
-           // Tampilkan Sweet Alert dengan pesan sukses
            Swal.fire({
                 icon: 'success',
                 title: 'Success',
@@ -254,12 +249,9 @@ function updateProduct(event, productId) {
             });
 
             closeEditProductModal();
-            // Redirect pengguna ke halaman products
             $('#product-table').DataTable().ajax.reload();
-            // Lakukan refresh atau tindakan lain yang sesuai pada halaman
         },
         error: function(xhr) {
-            // Tangani kesalahan jika terjadi
             console.log(xhr.responseText);
             alert('Failed to update category product');
         }
@@ -268,23 +260,20 @@ function updateProduct(event, productId) {
 
 
 function closeEditProductModal() {
-        $('#editProductModal').addClass("hidden"); // Menutup modal
+        $('#editProductModal').addClass("hidden"); 
     }
 
 
 function openCreateProductModal() {
-    // Panggil Ajax untuk mengambil data kategori
     $.ajax({
         url: '/api/category-product',
         type: 'GET',
         success: function(response) {
-            // Dapatkan elemen <select>
             var selectElement = $('#newProductCategory');
 
-            // Hapus opsi sebelumnya (jika ada)
             selectElement.empty();
 
-            // Loop melalui data kategori dan tambahkan opsi ke elemen <select>
+          
             response.data.forEach(function(category) {
                 selectElement.append($('<option>', {
                     value: category.id,
@@ -292,12 +281,11 @@ function openCreateProductModal() {
                 }));
             });
 
-            // Tampilkan modal setelah berhasil mendapatkan data kategori
+         
             $('#createProductModal').removeClass('hidden');
             
         },
         error: function(xhr) {
-            // Tangani kesalahan jika terjadi
             console.log(xhr.responseText);
             alert('Gagal Load data Kategori Produk');
         }
@@ -326,7 +314,6 @@ function saveProduct() {
         type: 'POST',
         data: formData,
         success: function(response) {
-            // Tampilkan Sweet Alert dengan pesan sukses
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
@@ -334,7 +321,7 @@ function saveProduct() {
                 showConfirmButton: false,
                 timer: 2500
             }).then(function() {
-                // Reset form setelah berhasil menyimpan data
+               
                 $('#newProductName').val('');
                 $('#newProductCode').val('');
                 $('#newProductCategory').val('');
@@ -345,11 +332,9 @@ function saveProduct() {
                 
             });
             closeCreateProductModal()
-                // Lakukan refresh atau tindakan lain yang sesuai pada halaman
                 $('#product-table').DataTable().ajax.reload();
         },
         error: function(xhr) {
-            // Tangani kesalahan jika terjadi
             console.log(xhr.responseText);
             alert('Failed to create  product');
         }
