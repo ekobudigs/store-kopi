@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\CategoryProductController;
-use App\Http\Controllers\LandingPageController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\CategoryProductController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthenticatedSessionController::class, 'create'])
+->name('login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
